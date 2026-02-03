@@ -26,6 +26,24 @@ add_action( 'wp_enqueue_scripts', 'child_enqueue_styles', 15 );
 
 
 /**
+ * RDC CUSTOM MENUS
+ */
+function rdc_register_menus() {
+	register_nav_menus(
+		array(
+			'sidebar-menu' => __('RDC Main Menu: Sidebar Menu (Categorías)', 'rdc-custom-astra'),
+			'quick-links-menu' => __('RDC Main Menu: Quick Links Menu', 'rdc-custom-astra'),
+			'footer-about' => __('RDC Footer: Acerca de RDC', 'rdc-custom-astra'),
+			'footer-support' => __('RDC Footer: Atención al Cliente', 'rdc-custom-astra'),
+			'footer-resources' => __('RDC Footer: Recursos', 'rdc-custom-astra'),
+		)
+	);
+} 
+add_action('init', 'rdc_register_menus');
+
+
+
+/**
  * RDC CUSTOM HEADER
  */
 
@@ -70,9 +88,50 @@ add_action('wp', 'rdc_remove_astra_header');
 
 
 /**
- * Add rdc Custom Header
+ * Add RDC Custom Header
  */
 function rdc_custom_header_markup() {
 	get_template_part('template-parts/header-custom');
 }
 add_action('astra_header', 'rdc_custom_header_markup');
+
+/**
+ * END RDC CUSTOM HEADER
+ */
+
+
+/**
+ * RDC CUSTOM FOOTER
+ */
+
+function rdc_remove_astra_footer() {
+	remove_action('astra_footer', 'astra_footer_markup');
+}
+add_action('wp', 'rdc_remove_astra_footer');
+
+
+/**
+ * Add RDC Custom Footer
+ */
+function rdc_custom_footer_markup() {
+	get_template_part('template-parts/footer-custom');
+}
+add_action('astra_footer', 'rdc_custom_footer_markup');
+
+
+/**
+ * RDC Custom Footer scripts and styles
+ */
+function rdc_custom_footer_assets() {
+	wp_enqueue_style(
+		'rdc-footer-css',
+		get_stylesheet_directory_uri() . '/assets/css/custom-footer.css',
+		array(),
+		CHILD_THEME_RDC_CUSTOM_ASTRA_VERSION
+	);
+}
+add_action('wp_enqueue_scripts', 'rdc_custom_footer_assets');
+
+/**
+ * END RDC CUSTOM FOOTER
+ */
