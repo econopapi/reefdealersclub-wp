@@ -9,3 +9,14 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: rdc-custom-astra
 Template: astra
 */
+
+/* global colors */
+:root {
+  --rdc-blue: #009fe3;
+  --rdc-green: #3baa34;
+  --rdc-orange: #e94d1a;
+}
+
+a {
+    text-decoration: none!important;
+}
