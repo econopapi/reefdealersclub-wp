@@ -5,15 +5,20 @@
  * @package RDC Custom Astra
  */
 ?>
-<!-- newsletter cta section -->
- <div class="rdc-cta-section">
-    <div class="cta-overlay"></div>
-    <div class="cta-content">
-        <h2 class="cta-title">¡Suscríbete a nuestro newsletter y mantente actualizado!</h2>
-        <p class="cta-subtitle">Nuestro newsletter es la mejor forma de estar actualizado en el mundo del acuarismo.</p>
-        <a href="<?php echo esc_url(home_url('/newsletter')); ?>" class="cta-button popmake-258">Suscribirse</a>
+<!-- newsletter cta section refactorizada -->
+<div class="rdc-newsletter-boxed">
+    <div class="newsletter-inner">
+        <div class="newsletter-image">
+            <!-- Imagen decorativa, puede estar rota -->
+            <img src="<?php echo esc_url(get_stylesheet_directory_uri() . '/assets/images/coral.png'); ?>" alt="RDC" />
+        </div>
+        <div class="newsletter-content">
+            <h2 class="newsletter-title">Descubre cómo convertirte en un Reef Dealer</h2>
+            <p class="newsletter-subtitle">Tendrás acceso al catálogo y precios exclusivos de Reef Dealers Club.</p>
+            <a href="<?php echo esc_url(home_url('/formulario-distribuidores')); ?>" class="newsletter-button">Más información</a>
+        </div>
     </div>
- </div>
+</div>
 
  <!-- main footer -->
 <footer class="rdc-footer">
