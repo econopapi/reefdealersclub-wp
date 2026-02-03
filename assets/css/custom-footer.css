@@ -82,9 +82,9 @@
 }
 
 .cta-button:hover {
-  background: #ff4522;
+  background: var(--rdc-green);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 99, 71, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
 }
 
 /* Main Footer */
@@ -154,7 +154,7 @@
 .contact-phone svg,
 .contact-email svg {
   flex-shrink: 0;
-  color: #3b82f6;
+  color: var(--rdc-blue);
 }
 
 .contact-phone a,
@@ -166,7 +166,7 @@
 
 .contact-phone a:hover,
 .contact-email a:hover {
-  color: #3b82f6;
+  color: var(--rdc-blue);
 }
 
 .contact-hours {
@@ -209,7 +209,7 @@
 }
 
 .social-links a:hover {
-  background: #3b82f6;
+  background: var(--rdc-blue);
   color: #fff;
   transform: translateY(-3px);
 }
@@ -243,7 +243,7 @@
 }
 
 .footer-column ul li a:hover {
-  color: #3b82f6;
+  color: var(--rdc-blue);
   padding-left: 5px;
 }
 
@@ -288,7 +288,7 @@
 }
 
 .legal-links a:hover {
-  color: #3b82f6;
+  color: var(--rdc-blue);
 }
 
 .legal-links .separator {
