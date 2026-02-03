@@ -250,3 +250,165 @@ function rdc_render_product_categories_block($attributes) {
 /**
  * END RDC CUSTOM PRODUCT CATEGORIES BLOCK
  */
+
+
+/**
+ * RDC CUSTOM FEATURED BRANDS BLOCK
+ */
+
+/**
+ * Register RDC Featured Brands Block
+ */
+function rdc_register_featured_brands_block() {
+	// register block script
+	wp_register_script(
+		'rdc-featured-brands-block',
+		get_stylesheet_directory_uri() . '/blocks/featured-brands/block.js',
+		array('wp-blocks', 'wp-element', 'wp-components', 'wp-data'),
+		CHILD_THEME_RDC_CUSTOM_ASTRA_VERSION
+	);
+
+	// register block styles
+	wp_register_style(
+		'rdc-featured-brands-block-editor',
+		get_stylesheet_directory_uri() . '/blocks/featured-brands/editor.css',
+		array('wp-edit-blocks'),
+		CHILD_THEME_RDC_CUSTOM_ASTRA_VERSION
+	);
+
+	wp_register_style(
+		'rdc-featured-brands-block',
+		get_stylesheet_directory_uri() . '/blocks/featured-brands/style.css',
+		array(),
+		CHILD_THEME_RDC_CUSTOM_ASTRA_VERSION
+	);
+
+	// register carousel script
+	wp_register_script(
+		'rdc-brands-carousel',
+		get_stylesheet_directory_uri() . '/blocks/featured-brands/carousel.js',
+		array('jquery'),
+		CHILD_THEME_RDC_CUSTOM_ASTRA_VERSION,
+		true
+	);
+
+	// register the block
+	register_block_type(
+		'rdc/featured-brands',
+		array(
+			'editor_script' => 'rdc-featured-brands-block',
+			'editor_style' => 'rdc-featured-brands-block-editor',
+			'style' => 'rdc-featured-brands-block',
+			'render_callback' => 'rdc_render_featured_brands_block',
+			'attributes' => array(
+				'selectedBrands' => array(
+					'type' => 'array',
+					'default' => array(),
+				),
+				'title' => array(
+					'type' => 'string',
+					'default' => 'Marcas Destacadas',
+				),
+				'autoplaySpeed' => array(
+					'type' => 'number',
+					'default' => 3000, // en milisegundos
+				),
+			),
+		)
+	);
+}
+add_action('init', 'rdc_register_featured_brands_block');
+
+/**
+ * Render RDC Featured Brands Block
+ */
+function rdc_render_featured_brands_block($attributes) {
+	$selected_brands = isset($attributes['selectedBrands']) ? $attributes['selectedBrands']:array();
+	$title = isset($attributes['title'])? $attributes['title']: 'Marcas Destacadas';
+	$display_mode = isset($attributes['displayMode'])? $attributes['displayMode']: 'carousel';
+	$autoplay_speed = isset($attributes['autoplaySpeed'])? $attributes['autoplaySpeed']: 3000;
+
+	if(empty($selected_brands)) {
+		return '';
+	}
+
+	// enqueue carousel script only for carousel mode
+	if($display_mode === 'carousel') {
+		wp_enqueue_script('rdc-brands-carousel');
+	}
+
+	ob_start();
+	?>
+
+	<div class="rdc-featured-brands <?php echo esc_attr('mode-' . $display_mode); ?>" <?php if($display_mode === 'carousel'): ?>data-autoplay-speed="<?php echo esc_attr($autoplay_speed); ?>"<?php endif; ?>>
+		<?php if (!empty($title)): ?>
+			<h2 class="brands-title"><?php echo esc_html($title); ?></h2>
+		<?php endif; ?>
+		
+		<?php if($display_mode === 'carousel'): ?>
+			<div class="brands-carousel-wrapper">
+				<button class="carousel-nav carousel-prev" aria-label="Anterior">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+						<path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>		
+				</button>
+				<div class="brands-carousel-container">
+					<div class="brands-carousel">
+						<?php foreach ($selected_brands as $brand_id):
+							$brand = get_term($brand_id, 'product_brand');
+							if(!$brand || is_wp_error($brand)) {
+								continue;
+							}
+							$thumbnail_id = get_term_meta($brand_id, 'thumbnail_id', true);
+							$image_url = $thumbnail_id? wp_get_attachment_url($thumbnail_id) : '';
+							$brand_link = get_term_link($brand);
+						?>
+						<div class="brand-item">
+							<a href="<?php echo esc_url($brand_link); ?>" class="brand-link">
+								<?php if($image_url): ?>
+									<img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($brand->name); ?>" class="brand-logo">
+								<?php else: ?>
+									<span class="brand-name-text"><?php echo esc_html($brand->name); ?></span>
+								<?php endif; ?>
+							</a>
+						</div>
+						<?php endforeach; ?>
+					</div>
+				</div>
+				<button class="carousel-nav carousel-next" aria-label="Siguiente">
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+						<path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+					</svg>				
+				</button>
+			</div>
+		<?php else: ?>
+			<div class="brands-grid">
+				<?php foreach ($selected_brands as $brand_id):
+					$brand = get_term($brand_id, 'product_brand');
+					if(!$brand || is_wp_error($brand)) {
+						continue;
+					}
+					$thumbnail_id = get_term_meta($brand_id, 'thumbnail_id', true);
+					$image_url = $thumbnail_id? wp_get_attachment_url($thumbnail_id) : '';
+					$brand_link = get_term_link($brand);
+				?>
+				<div class="brand-item">
+					<a href="<?php echo esc_url($brand_link); ?>" class="brand-link">
+						<?php if($image_url): ?>
+							<img src="<?php echo esc_url($image_url); ?>" alt="<?php echo esc_attr($brand->name); ?>" class="brand-logo">
+						<?php else: ?>
+							<span class="brand-name-text"><?php echo esc_html($brand->name); ?></span>
+						<?php endif; ?>
+					</a>
+				</div>
+				<?php endforeach; ?>
+			</div>
+		<?php endif; ?>
+	</div>
+	<?php
+	return ob_get_clean();
+}
+
+/**
+ * END RDC CUSTOM FEATURED BRANDS BLOCK
+ */
