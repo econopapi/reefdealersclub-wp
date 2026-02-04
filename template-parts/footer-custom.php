@@ -15,7 +15,7 @@
         <div class="newsletter-content">
             <h2 class="newsletter-title">Descubre cómo convertirte en un Reef Dealer</h2>
             <p class="newsletter-subtitle">Tendrás acceso al catálogo y precios exclusivos de Reef Dealers Club.</p>
-            <a href="<?php echo esc_url(home_url('/formulario-distribuidores')); ?>" class="newsletter-button">Más información</a>
+            <a href="<?php echo esc_url(home_url('/mayoristas-y-distribuidores')); ?>" class="newsletter-button">Más información</a>
         </div>
     </div>
 </div>
