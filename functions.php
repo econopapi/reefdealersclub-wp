@@ -618,3 +618,90 @@ function rdc_render_all_brands_block($attributes) {
 	<?php
 	return ob_get_clean();
 }
+
+/**
+ * Eliminar imágenes asociadas al producto al borrar un producto
+ */
+add_action('before_delete_post', 'rdc_delete_product_images', 10, 1);
+
+function rdc_delete_product_images($post_id) {
+
+    // Solo productos
+    if (get_post_type($post_id) !== 'product') {
+        return;
+    }
+
+    // Evitar ejecuciones duplicadas
+    if (wp_is_post_revision($post_id)) {
+        return;
+    }
+
+    // Imagen destacada
+    $thumbnail_id = get_post_thumbnail_id($post_id);
+    if ($thumbnail_id) {
+        wp_delete_attachment($thumbnail_id, true);
+    }
+
+    // Galería del producto
+    $gallery_ids = get_post_meta($post_id, '_product_image_gallery', true);
+
+    if (!empty($gallery_ids)) {
+        $gallery_ids = explode(',', $gallery_ids);
+
+        foreach ($gallery_ids as $image_id) {
+            wp_delete_attachment((int) $image_id, true);
+        }
+    }
+}
+
+/**
+ * Requerir login para todo el contenido público de WooCommerce
+ */
+function rdc_require_login_for_woocommerce_content() {
+	if (is_user_logged_in() || is_admin() || wp_doing_ajax() || wp_doing_cron()) {
+		return;
+	}
+
+	if (defined('REST_REQUEST') && REST_REQUEST) {
+		return;
+	}
+
+	if (!function_exists('is_woocommerce')) {
+		return;
+	}
+
+	if (function_exists('is_account_page') && is_account_page()) {
+		return;
+	}
+
+	$product_taxonomies = get_object_taxonomies('product');
+	$post_type_query = get_query_var('post_type');
+	$is_product_search = is_search() && (
+		'product' === $post_type_query ||
+		(is_array($post_type_query) && in_array('product', $post_type_query, true))
+	);
+
+	$requires_login = is_woocommerce() ||
+		is_singular('product') ||
+		is_post_type_archive('product') ||
+		(!empty($product_taxonomies) && is_tax($product_taxonomies)) ||
+		$is_product_search;
+
+	if (!$requires_login) {
+		return;
+	}
+
+	$login_url = function_exists('wc_get_page_permalink') ? wc_get_page_permalink('myaccount') : '';
+
+	if (empty($login_url)) {
+		$login_url = wp_login_url();
+	}
+
+	$current_path = isset($_SERVER['REQUEST_URI']) ? wp_unslash($_SERVER['REQUEST_URI']) : '/';
+	$current_url = home_url($current_path);
+	$redirect_url = add_query_arg('redirect', $current_url, $login_url);
+
+	wp_safe_redirect($redirect_url);
+	exit;
+}
+add_action('template_redirect', 'rdc_require_login_for_woocommerce_content', 1);
