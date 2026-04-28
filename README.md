@@ -1,10 +1,206 @@
 # RDC Custom Astra Theme
 
-Tema hijo de [Astra](https://wpastra.com) desarrollado a medida para el sitio de  [Reef Dealers Club](https://reefdealersclub.com).
+Tema hijo personalizado de Astra para Reef Dealers Club.
 
-**Autor:** Daniel Limón  
-**Contacto:** dani@dlimon.net  
-**Versión:** 1.0.0  
-**Licencia:** Pendiente
+Este repositorio contiene el tema hijo `RDC Custom Astra` diseñado para trabajar junto con el tema padre `Astra` y WooCommerce. El objetivo principal del tema es ofrecer componentes a la medida para la presentación de marcas, categorías de producto y un header/footer customizados con una navegación lateral dinámica.
 
----
+**Autor:** Daniel Limón
+**Contacto:** dani@dlimon.net
+**Versión:** 1.0.0
+**Licencia:** GNU General Public License v2 o posterior (ver `style.css`)
+
+Tabla de contenido
+- Visión general
+- Requisitos
+- Instalación
+- Estructura del tema (resumen de archivos)
+- Componentes principales
+	- `functions.php` (principal)
+	- Header personalizado (`template-parts/header-custom.php`, `assets/css/custom-header.css`, `assets/js/custom-header.js`)
+	- Footer personalizado (`template-parts/footer-custom.php`, `assets/css/custom-footer.css`)
+	- Bloques personalizados (Gutenberg): `blocks/product-categories`, `blocks/featured-brands`, `blocks/all-brands`
+- Hooks, filtros y comportamientos importantes
+- Notas de desarrollo y recomendaciones
+- Contacto
+
+--
+
+Visión general
+----------
+
+`RDC Custom Astra` es un tema hijo que:
+- Reemplaza el header y footer de Astra con plantillas personalizadas.
+- Añade tres bloques dinámicos renderizados por PHP para trabajar con taxonomías relacionadas a productos y marcas.
+- Provee estilos y scripts específicos para la UI (menú lateral, carrusel de marcas, filtros alfabéticos).
+
+Requisitos
+----------
+
+- WordPress (versión moderna; testar con WordPress 5.8+ y Gutenberg moderno).
+- Tema padre `Astra` (el tema es un child theme; ver `style.css`: `Template: astra`).
+- WooCommerce: muchos componentes (términos `product_cat`, `product_brand`, enlaces a carrito/mi cuenta) requieren WooCommerce y/o una taxonomía de marcas disponible en la instalación.
+- Recomendado: PHP 7.4+ y soporte para HTTPS en el sitio.
+
+Instalación
+------------
+
+1. Copiar la carpeta del tema a `wp-content/themes/`.
+2. Asegurarse de que el tema padre `Astra` esté instalado y activo.
+3. Activar `RDC Custom Astra` como tema hijo desde el admin de WordPress.
+4. En `Apariencia → Menús`, crear/asignar las ubicaciones de menú:
+	 - `sidebar-menu`
+	 - `quick-links-menu`
+	 - `footer-about`
+	 - `footer-support`
+	 - `footer-resources`
+5. Configurar el `Custom Logo` en `Apariencia → Personalizar` si se desea mostrar logo.
+6. Verificar que WooCommerce esté activo y que la taxonomía `product_brand` exista (plugin de marcas o implementación propia).
+
+Estructura del tema (resumen)
+-----------------------------
+
+Estructura relevante (paths relativos a la raíz del tema):
+
+- `functions.php` — Entrypoint del tema hijo; registra menús, encola assets, registra bloques y contiene los render callbacks.
+- `style.css` — Cabecera del tema (meta: nombre, autor, `Template: astra`) y variables CSS globales (colores).
+- `assets/css/custom-header.css` — Estilos del header y del menú lateral.
+- `assets/css/custom-footer.css` — Estilos del footer y sección de newsletter.
+- `assets/js/custom-header.js` — Lógica JS del header: toggle del sidebar, submenú dinámico, llamadas AJAX para subcategorías.
+- `blocks/`
+	- `product-categories/` — Editor + frontend para bloque de categorías (archivo principal `block.js`, `editor.css`, `style.css`).
+	- `featured-brands/` — Bloque de marcas destacadas con soporte carousel (`block.js`, `carousel.js`, `editor.css`, `style.css`).
+	- `all-brands/` — Bloque con filtro alfabético (`block.js`, `frontend.js`, `editor.css`, `style.css`).
+- `template-parts/header-custom.php` — Markup del header personalizado y menú lateral (incluye fallbacks `rdc_default_quick_links`, `rdc_default_sidebar_menu`).
+- `template-parts/footer-custom.php` — Markup del footer personalizado (newsletter, columnas de enlaces, contacto).
+
+Componentes y comportamiento (análisis detallado)
+-----------------------------------------------
+
+1) `functions.php`
+- Define la constante `CHILD_THEME_RDC_CUSTOM_ASTRA_VERSION`.
+- Encola `style.css` del child con dependencia de `astra-theme-css`.
+- Registra ubicaciones de menú: `sidebar-menu`, `quick-links-menu`, `footer-about`, `footer-support`, `footer-resources`.
+- Header/footer: elimina las acciones por defecto de Astra (`remove_action('astra_header', 'astra_header_markup')` y similar para footer) y añade las plantillas propias con `get_template_part('template-parts/header-custom')` / `footer-custom` mediante las acciones `astra_header` y `astra_footer`.
+- Encola assets específicos del header/footer (`assets/css/custom-header.css`, `assets/js/custom-header.js`, `assets/css/custom-footer.css`). El script del header es localizado con `rdcHeader` que contiene `ajaxUrl` y `nonce`.
+
+Bloques registrados (por `functions.php`):
+
+- `rdc/product-categories`:
+	- Scripts: `blocks/product-categories/block.js` (editor), `blocks/product-categories/editor.css` (editor), `blocks/product-categories/style.css` (frontend).
+	- Atributos: `selectedCategories` (array), `title` (string), `subtitle` (string).
+	- Render callback: `rdc_render_product_categories_block($attributes)` — genera markup con `rdc-product-categories`, muestra imagen (meta `thumbnail_id`) y nombre de categoría.
+	- Comportamiento: retorna vacío si no hay categorías seleccionadas; utiliza `get_term` y `get_term_meta` para thumbnails.
+
+- `rdc/featured-brands`:
+	- Scripts: `blocks/featured-brands/block.js`, `blocks/featured-brands/editor.css`, `blocks/featured-brands/style.css`, y `blocks/featured-brands/carousel.js` para la lógica del carrusel.
+	- Atributos: `selectedBrands` (array), `title` (string), `displayMode` (carousel|grid), `autoplaySpeed` (number).
+	- Render callback: `rdc_render_featured_brands_block($attributes)` — genera el carrusel o grid; encola `rdc-brands-carousel` cuando el modo es `carousel`.
+	- Notes: `carousel.js` realiza clonados para bucle infinito, maneja responsive y autoplay.
+
+- `rdc/all-brands`:
+	- Scripts: `blocks/all-brands/block.js`, `blocks/all-brands/editor.css`, `blocks/all-brands/style.css`, `blocks/all-brands/frontend.js`.
+	- Atributos: `title`, `showAlphabetFilter`, `columns`, `displayStyle`, `showBrandCount`, `brandImageSize`.
+	- Render callback: `rdc_render_all_brands_block($attributes)` — obtén marcas con `get_terms('product_brand')`, organiza por letra, imprime filtro alfabético y conteo; inyecta `window.RDCAllBrandsData` con datos iniciales.
+	- `frontend.js` implementa filtrado alfabético y animaciones; usa `IntersectionObserver` y ofrece accesibilidad básica (navegación por teclado para botones filtro).
+
+2) `template-parts/header-custom.php`
+- Markup del header con: logo, botón hamburguesa `.rdc-menu-toggle`, barra de búsqueda, acciones (login/cart) y estructura del menú lateral (`.rdc-sidebar-menu`) y panel de submenú `.rdc-submenu-panel`.
+- Usa `wp_nav_menu` para dos menús (`quick-links-menu` y `sidebar-menu`) y provee `rdc_default_quick_links()` y `rdc_default_sidebar_menu()` como fallbacks que generan contenido dinámico de `product_cat` (categorías top-level) si no hay menú definido.
+
+3) `assets/js/custom-header.js` (comportamiento clave)
+- Controla apertura/cierre del sidebar y panel de submenú, gestión de estados CSS (`.active`), bloqueo de scroll del body al abrir overlay.
+- Al hacer click en un enlace de la lista principal intenta usar hijos del menú (si existen) o, si no hay hijos, realiza una petición AJAX con `action: 'rdc_get_subcategories'` y `nonce` para obtener subcategorías dinámicamente.
+- IMPORTANTE: en este tema NO se encontró la implementación del handler AJAX `rdc_get_subcategories` en `functions.php`; el JS espera una respuesta con `success` y `data.groups` para renderizar el panel. Ver la sección "Notas y recomendaciones" abajo.
+
+4) `template-parts/footer-custom.php` y `assets/css/custom-footer.css`
+- Contiene la sección de newsletter (`.rdc-newsletter-boxed`) y el footer principal con 4 columnas: logo/contacto, acerca de, atención al cliente y recursos.
+- Usa las ubicaciones de menú `footer-about`, `footer-support`, `footer-resources` con fallbacks codificados.
+
+5) Comportamientos adicionales en `functions.php`
+- `rdc_delete_product_images($post_id)` enlazada a `before_delete_post`: borra attachments (thumbnail y galería) asociados a un producto cuando se borra el post — esto elimina físicamente archivos del media library, por lo que hay que usarlo con precaución.
+- `rdc_require_login_for_woocommerce_content()` enlazada a `template_redirect`: fuerza login para ver contenido relacionado con WooCommerce (tienda, producto singular, taxonomías de producto, búsquedas de producto). Redirige a `myaccount` o a la URL de login con parámetro `redirect`.
+
+Hooks y menús registrados
+------------------------
+
+- Menús registrados (usar en Apariencia → Menús):
+	- `sidebar-menu` — menú principal de categorías (sidebar float)
+	- `quick-links-menu` — enlaces rápidos en columna izquierda del sidebar
+	- `footer-about` — columna "Acerca de"
+	- `footer-support` — columna "Atención al cliente"
+	- `footer-resources` — columna "Recursos"
+
+Notas y recomendaciones (puntos detectados durante el análisis)
+------------------------------------------------------------
+
+1. Handler AJAX faltante
+- `assets/js/custom-header.js` envía una petición con `action: 'rdc_get_subcategories'` y `nonce: rdc_menu_nonce`, sin embargo no se encuentra una función PHP que responda a esa acción en `functions.php`. Para que el submenú funcione correctamente debe implementarse un handler AJAX en el servidor.
+
+Ejemplo de handler sugerido (añadir a `functions.php` o a un include en `includes/`):
+
+```php
+add_action('wp_ajax_rdc_get_subcategories', 'rdc_get_subcategories');
+add_action('wp_ajax_nopriv_rdc_get_subcategories', 'rdc_get_subcategories');
+
+function rdc_get_subcategories() {
+		check_ajax_referer('rdc_menu_nonce', 'nonce');
+
+		$cat_id = isset($_POST['catId']) ? intval($_POST['catId']) : 0;
+		if (!$cat_id) {
+				wp_send_json_error();
+		}
+
+		$children = get_terms(array(
+				'taxonomy' => 'product_cat',
+				'hide_empty' => true,
+				'parent' => $cat_id,
+		));
+
+		// Agrupar resultado (ejemplo simple)
+		$groups = array();
+		if (!empty($children) && !is_wp_error($children)) {
+				$items = array();
+				foreach ($children as $c) {
+						$items[] = array(
+								'title' => $c->name,
+								'link'  => get_term_link($c),
+						);
+				}
+				$groups[] = array(
+						'title' => 'Subcategorías',
+						'items' => $items,
+				);
+		}
+
+		wp_send_json_success(array('title' => '', 'groups' => $groups));
+}
+```
+
+2. Taxonomía `product_brand`
+- El tema asume la existencia de la taxonomía `product_brand` (usada por los bloques de marcas). Asegúrese de que exista (plugin de marcas o código que registre la taxonomía). Si no existe, los bloques no mostrarán marcas.
+
+3. Eliminación de imágenes al borrar productos
+- `rdc_delete_product_images` borra archivos adjuntos del servidor. Revisar políticas de data-retention y backups si se activa en producción. Si no desea este comportamiento eliminar o comentar el hook.
+
+4. Forzar login para WooCommerce
+- `rdc_require_login_for_woocommerce_content` limita el acceso público a la tienda. Revisar su lógica si el sitio requiere accesibilidad pública a ciertas páginas (excepciones ya incluidas: admin, AJAX, REST, pagina de cuenta).
+
+5. Scripts y build
+- Los scripts de bloques están en JS plano usando las APIs globales de WordPress (`window.wp`). No se detectó un proceso de build (`package.json`) en este tema: editar los archivos JS directamente es viable, pero si desea usar ESNext/JSX/Tooling recomendamos introducir un proceso de bundling y compilar los assets a `blocks/*` antes de desplegar.
+
+Buenas prácticas y mejoras sugeridas
+----------------------------------
+
+- Añadir manejo de focus y roles ARIA en el menú lateral para mejorar accesibilidad (focus trap, atributos `aria-expanded` en el toggle, `aria-controls` hacia el panel).
+- Validar y sanitizar datos en los render callbacks (ya se usan `esc_html`, `esc_url` en muchos lugares — mantener y revisar cada salida).
+- Añadir tests básicos o un entorno local con WP + WooCommerce para probar bloques dinámicos.
+- Revisar la política de eliminación de imágenes y considerar uso de trash en lugar de borrado permanente si se desea reversibilidad.
+
+Contacto
+--------
+
+Si quieres que implemente las mejoras o que agregue el handler AJAX directamente, puedo hacerlo: indícame si quieres que lo agregue a `functions.php` (o mejor: a un archivo dentro de `includes/`) y lo aplico.
+
+--
+
+Archivo actualizado: `README.md`
