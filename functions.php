@@ -26,6 +26,7 @@ add_action( 'wp_enqueue_scripts', 'child_enqueue_styles', 15 );
 
 // Load modularized theme features.
 require_once get_stylesheet_directory() . '/includes/header.php';
+require_once get_stylesheet_directory() . '/includes/search.php';
 
 
 /**

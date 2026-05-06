@@ -35,6 +35,10 @@ Novedades recientes
 	- Contador de carrito en tiempo real via fragments de WooCommerce.
 	- Render mas seguro del panel de submenu y enlace rapido Ver todo.
 	- Endpoint AJAX para cargar subcategorias y compatibilidad con menus curados.
+- Se agrego una busqueda avanzada en frontend con plantilla dedicada:
+	- Productos buscados por texto y SKU (priorizando coincidencias de SKU).
+	- Seccion de articulos de blog en la misma vista de resultados.
+	- Modulo desacoplado en `includes/search.php` y estilos en `assets/css/search-results.css`.
 
 --
 
@@ -76,9 +80,11 @@ Estructura relevante (paths relativos a la raíz del tema):
 
 - `functions.php` — Entrypoint del tema hijo; registra menús, carga modulos en `includes/` y registra bloques.
 - `includes/header.php` — Modulo del header (enqueue, hooks de Astra, AJAX de subcategorias, fragments del carrito y metadatos de menu).
+- `includes/search.php` — Modulo de busqueda (consultas por texto/SKU, query de blog y encolado de estilos de resultados).
 - `style.css` — Cabecera del tema (meta: nombre, autor, `Template: astra`) y variables CSS globales (colores).
 - `assets/css/custom-header.css` — Estilos del header y del menú lateral.
 - `assets/css/custom-footer.css` — Estilos del footer y sección de newsletter.
+- `assets/css/search-results.css` — Estilos de la plantilla de resultados de busqueda.
 - `assets/js/custom-header.js` — Lógica JS del header: toggle del sidebar, submenú dinámico, llamadas AJAX para subcategorías.
 - `blocks/`
 	- `product-categories/` — Editor + frontend para bloque de categorías (archivo principal `block.js`, `editor.css`, `style.css`).
@@ -86,6 +92,7 @@ Estructura relevante (paths relativos a la raíz del tema):
 	- `all-brands/` — Bloque con filtro alfabético (`block.js`, `frontend.js`, `editor.css`, `style.css`).
 - `template-parts/header-custom.php` — Markup del header personalizado y menú lateral (incluye fallbacks `rdc_default_quick_links`, `rdc_default_sidebar_menu`).
 - `template-parts/footer-custom.php` — Markup del footer personalizado (newsletter, columnas de enlaces, contacto).
+- `search.php` — Plantilla de resultados unificada para productos (texto + SKU) y blog.
 
 Componentes y comportamiento (análisis detallado)
 -----------------------------------------------
@@ -124,7 +131,7 @@ Bloques registrados (por `functions.php`):
 3) `assets/js/custom-header.js` (comportamiento clave)
 - Controla apertura/cierre del sidebar y panel de submenú, gestión de estados CSS (`.active`), bloqueo de scroll del body al abrir overlay.
 - Al hacer click en un enlace de la lista principal intenta usar hijos del menú (si existen) o, si no hay hijos, realiza una petición AJAX con `action: 'rdc_get_subcategories'` y `nonce` para obtener subcategorías dinámicamente.
-- IMPORTANTE: en este tema NO se encontró la implementación del handler AJAX `rdc_get_subcategories` en `functions.php`; el JS espera una respuesta con `success` y `data.groups` para renderizar el panel. Ver la sección "Notas y recomendaciones" abajo.
+- El handler AJAX `rdc_get_subcategories` esta implementado en `includes/header.php`.
 
 4) `template-parts/footer-custom.php` y `assets/css/custom-footer.css`
 - Contiene la sección de newsletter (`.rdc-newsletter-boxed`) y el footer principal con 4 columnas: logo/contacto, acerca de, atención al cliente y recursos.
@@ -147,59 +154,16 @@ Hooks y menús registrados
 Notas y recomendaciones (puntos detectados durante el análisis)
 ------------------------------------------------------------
 
-1. Handler AJAX faltante
-- `assets/js/custom-header.js` envía una petición con `action: 'rdc_get_subcategories'` y `nonce: rdc_menu_nonce`, sin embargo no se encuentra una función PHP que responda a esa acción en `functions.php`. Para que el submenú funcione correctamente debe implementarse un handler AJAX en el servidor.
-
-Ejemplo de handler sugerido (añadir a `functions.php` o a un include en `includes/`):
-
-```php
-add_action('wp_ajax_rdc_get_subcategories', 'rdc_get_subcategories');
-add_action('wp_ajax_nopriv_rdc_get_subcategories', 'rdc_get_subcategories');
-
-function rdc_get_subcategories() {
-		check_ajax_referer('rdc_menu_nonce', 'nonce');
-
-		$cat_id = isset($_POST['catId']) ? intval($_POST['catId']) : 0;
-		if (!$cat_id) {
-				wp_send_json_error();
-		}
-
-		$children = get_terms(array(
-				'taxonomy' => 'product_cat',
-				'hide_empty' => true,
-				'parent' => $cat_id,
-		));
-
-		// Agrupar resultado (ejemplo simple)
-		$groups = array();
-		if (!empty($children) && !is_wp_error($children)) {
-				$items = array();
-				foreach ($children as $c) {
-						$items[] = array(
-								'title' => $c->name,
-								'link'  => get_term_link($c),
-						);
-				}
-				$groups[] = array(
-						'title' => 'Subcategorías',
-						'items' => $items,
-				);
-		}
-
-		wp_send_json_success(array('title' => '', 'groups' => $groups));
-}
-```
-
-2. Taxonomía `product_brand`
+1. Taxonomía `product_brand`
 - El tema asume la existencia de la taxonomía `product_brand` (usada por los bloques de marcas). Asegúrese de que exista (plugin de marcas o código que registre la taxonomía). Si no existe, los bloques no mostrarán marcas.
 
-3. Eliminación de imágenes al borrar productos
+2. Eliminación de imágenes al borrar productos
 - `rdc_delete_product_images` borra archivos adjuntos del servidor. Revisar políticas de data-retention y backups si se activa en producción. Si no desea este comportamiento eliminar o comentar el hook.
 
-4. Forzar login para WooCommerce
+3. Forzar login para WooCommerce
 - `rdc_require_login_for_woocommerce_content` limita el acceso público a la tienda. Revisar su lógica si el sitio requiere accesibilidad pública a ciertas páginas (excepciones ya incluidas: admin, AJAX, REST, pagina de cuenta).
 
-5. Scripts y build
+4. Scripts y build
 - Los scripts de bloques están en JS plano usando las APIs globales de WordPress (`window.wp`). No se detectó un proceso de build (`package.json`) en este tema: editar los archivos JS directamente es viable, pero si desea usar ESNext/JSX/Tooling recomendamos introducir un proceso de bundling y compilar los assets a `blocks/*` antes de desplegar.
 
 Buenas prácticas y mejoras sugeridas
