@@ -10,6 +10,7 @@ Este repositorio contiene el tema hijo `RDC Custom Astra` diseñado para trabaja
 **Licencia:** GNU General Public License v2 o posterior (ver `style.css`)
 
 Tabla de contenido
+- Novedades recientes
 - Visión general
 - Requisitos
 - Instalación
@@ -22,6 +23,18 @@ Tabla de contenido
 - Hooks, filtros y comportamientos importantes
 - Notas de desarrollo y recomendaciones
 - Contacto
+
+--
+
+Novedades recientes
+----------
+
+- Se modularizo la logica del header en [includes/header.php](includes/header.php) para mantener [functions.php](functions.php) como entrypoint.
+- Se mejoro el header con el mismo comportamiento funcional solicitado:
+	- Buscador movil expandible con boton limpiar.
+	- Contador de carrito en tiempo real via fragments de WooCommerce.
+	- Render mas seguro del panel de submenu y enlace rapido Ver todo.
+	- Endpoint AJAX para cargar subcategorias y compatibilidad con menus curados.
 
 --
 
@@ -61,7 +74,8 @@ Estructura del tema (resumen)
 
 Estructura relevante (paths relativos a la raíz del tema):
 
-- `functions.php` — Entrypoint del tema hijo; registra menús, encola assets, registra bloques y contiene los render callbacks.
+- `functions.php` — Entrypoint del tema hijo; registra menús, carga modulos en `includes/` y registra bloques.
+- `includes/header.php` — Modulo del header (enqueue, hooks de Astra, AJAX de subcategorias, fragments del carrito y metadatos de menu).
 - `style.css` — Cabecera del tema (meta: nombre, autor, `Template: astra`) y variables CSS globales (colores).
 - `assets/css/custom-header.css` — Estilos del header y del menú lateral.
 - `assets/css/custom-footer.css` — Estilos del footer y sección de newsletter.
