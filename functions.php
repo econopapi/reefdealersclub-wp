@@ -11,7 +11,7 @@
 /**
  * Define Constants
  */
-define( 'CHILD_THEME_RDC_CUSTOM_ASTRA_VERSION', '1.0.0' );
+define( 'CHILD_THEME_RDC_CUSTOM_ASTRA_VERSION', '1.1.0' );
 
 /**
  * Enqueue styles
@@ -27,6 +27,7 @@ add_action( 'wp_enqueue_scripts', 'child_enqueue_styles', 15 );
 // Load modularized theme features.
 require_once get_stylesheet_directory() . '/includes/header.php';
 require_once get_stylesheet_directory() . '/includes/search.php';
+require_once get_stylesheet_directory() . '/includes/msi-promotions/init.php';
 
 
 /**

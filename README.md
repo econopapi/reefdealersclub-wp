@@ -6,7 +6,7 @@ Este repositorio contiene el tema hijo `RDC Custom Astra` diseñado para trabaja
 
 **Autor:** Daniel Limón
 **Contacto:** dani@dlimon.net
-**Versión:** 1.0.0
+**Versión:** 1.1.0
 **Licencia:** GNU General Public License v2 o posterior (ver `style.css`)
 
 Tabla de contenido
@@ -39,6 +39,11 @@ Novedades recientes
 	- Productos buscados por texto y SKU (priorizando coincidencias de SKU).
 	- Seccion de articulos de blog en la misma vista de resultados.
 	- Modulo desacoplado en `includes/search.php` y estilos en `assets/css/search-results.css`.
+- Se agrego un modulo de control granular de MSI para MercadoPago:
+	- Configuracion en admin desde `RDC Promociones -> MSI MercadoPago`.
+	- Whitelist de productos con meses permitidos por producto (3, 6, 9, 12).
+	- Control de checkout para bloquear a 1 mensualidad en carritos mixtos o sin MSI.
+	- Modulo desacoplado en `includes/msi-promotions/` y assets en `assets/css/msi-*.css` y `assets/js/msi-*.js`.
 
 --
 
@@ -81,11 +86,19 @@ Estructura relevante (paths relativos a la raíz del tema):
 - `functions.php` — Entrypoint del tema hijo; registra menús, carga modulos en `includes/` y registra bloques.
 - `includes/header.php` — Modulo del header (enqueue, hooks de Astra, AJAX de subcategorias, fragments del carrito y metadatos de menu).
 - `includes/search.php` — Modulo de busqueda (consultas por texto/SKU, query de blog y encolado de estilos de resultados).
+- `includes/msi-promotions/`
+	- `init.php` — Bootstrap del modulo MSI.
+	- `admin-page.php` — UI de administracion para MSI MercadoPago (settings y whitelist por producto).
+	- `checkout-control.php` — Calculo de elegibilidad MSI por carrito y encolado de control en checkout.
 - `style.css` — Cabecera del tema (meta: nombre, autor, `Template: astra`) y variables CSS globales (colores).
 - `assets/css/custom-header.css` — Estilos del header y del menú lateral.
 - `assets/css/custom-footer.css` — Estilos del footer y sección de newsletter.
 - `assets/css/search-results.css` — Estilos de la plantilla de resultados de busqueda.
+- `assets/css/msi-admin.css` — Estilos del panel de administracion MSI.
+- `assets/css/msi-checkout-control.css` — Estilos del aviso y estado visual de MSI en checkout.
 - `assets/js/custom-header.js` — Lógica JS del header: toggle del sidebar, submenú dinámico, llamadas AJAX para subcategorías.
+- `assets/js/msi-admin.js` — Interacciones del panel MSI (agregar/quitar productos, seleccion masiva de meses).
+- `assets/js/msi-checkout-control.js` — Control frontend de cuotas de MercadoPago segun reglas MSI del carrito.
 - `blocks/`
 	- `product-categories/` — Editor + frontend para bloque de categorías (archivo principal `block.js`, `editor.css`, `style.css`).
 	- `featured-brands/` — Bloque de marcas destacadas con soporte carousel (`block.js`, `carousel.js`, `editor.css`, `style.css`).
