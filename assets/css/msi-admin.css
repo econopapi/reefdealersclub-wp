@@ -1,0 +1,178 @@
+/*
+ * RDC MSI Promotions - Admin Styles
+ */
+
+.rdc-msi-wrap {
+	max-width: 900px;
+}
+
+.rdc-msi-wrap .rdc-msi-header {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-bottom: 5px;
+}
+
+.rdc-msi-wrap .rdc-msi-header h1 {
+	margin: 0;
+}
+
+.rdc-msi-wrap .rdc-msi-header .dashicons {
+	font-size: 30px;
+	width: 30px;
+	height: 30px;
+	color: #009ee3;
+}
+
+.rdc-msi-product-table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 15px 0;
+	background: #fff;
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+}
+
+.rdc-msi-product-table th,
+.rdc-msi-product-table td {
+	padding: 12px 15px;
+	text-align: left;
+	border-bottom: 1px solid #e0e0e0;
+	vertical-align: middle;
+}
+
+.rdc-msi-product-table th {
+	background: #f0f0f1;
+	font-weight: 600;
+	font-size: 13px;
+}
+
+.rdc-msi-product-table tr:last-child td {
+	border-bottom: none;
+}
+
+.rdc-msi-product-table .product-thumb {
+	width: 40px;
+	height: 40px;
+	object-fit: cover;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+}
+
+.rdc-msi-product-table .product-info {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+}
+
+.rdc-msi-product-table .product-name {
+	font-weight: 500;
+}
+
+.rdc-msi-product-table .product-sku {
+	color: #888;
+	font-size: 12px;
+}
+
+.rdc-msi-product-table .month-checks {
+	display: flex;
+	gap: 15px;
+}
+
+.rdc-msi-product-table .month-checks label {
+	display: flex;
+	align-items: center;
+	gap: 4px;
+	cursor: pointer;
+	font-size: 13px;
+	padding: 4px 8px;
+	border-radius: 4px;
+	border: 1px solid #ddd;
+	background: #f9f9f9;
+	transition: all 0.2s;
+}
+
+.rdc-msi-product-table .month-checks label:hover {
+	border-color: #009ee3;
+	background: #f0f8ff;
+}
+
+.rdc-msi-product-table .month-checks label.checked {
+	border-color: #009ee3;
+	background: #e6f4fd;
+	font-weight: 600;
+}
+
+.rdc-msi-product-table .remove-product {
+	color: #b32d2e;
+	cursor: pointer;
+	font-size: 16px;
+	border: none;
+	background: none;
+	padding: 5px;
+}
+
+.rdc-msi-product-table .remove-product:hover {
+	color: #dc3232;
+}
+
+.rdc-msi-add-product-row {
+	margin: 15px 0;
+	display: flex;
+	gap: 10px;
+	align-items: center;
+}
+
+.rdc-msi-add-product-row .wc-product-search {
+	min-width: 350px;
+}
+
+.rdc-msi-empty-state {
+	text-align: center;
+	padding: 40px 20px;
+	color: #888;
+}
+
+.rdc-msi-empty-state .dashicons {
+	font-size: 48px;
+	width: 48px;
+	height: 48px;
+	color: #ccc;
+	margin-bottom: 10px;
+}
+
+.rdc-msi-info-box {
+	background: #f0f8ff;
+	border-left: 4px solid #009ee3;
+	padding: 12px 16px;
+	margin: 15px 0;
+	font-size: 13px;
+	line-height: 1.5;
+}
+
+.rdc-msi-status-badge {
+	display: inline-block;
+	padding: 3px 10px;
+	border-radius: 12px;
+	font-size: 12px;
+	font-weight: 600;
+}
+
+.rdc-msi-status-badge.active {
+	background: #d4edda;
+	color: #155724;
+}
+
+.rdc-msi-status-badge.inactive {
+	background: #f8d7da;
+	color: #721c24;
+}
+
+#rdc-msi-select-all-months {
+	margin: 0 0 10px 0;
+}
+
+#rdc-msi-select-all-months label {
+	margin-right: 12px;
+	cursor: pointer;
+}

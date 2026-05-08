@@ -1,0 +1,58 @@
+/**
+ * RDC MSI Control - Checkout Styles
+ *
+ * Estilos para el disclaimer de MSI en el checkout de MercadoPago.
+ *
+ * @package RDC Custom Astra
+ * @since 1.1.0
+ */
+
+.rdc-msi-disclaimer {
+	display: flex;
+	align-items: flex-start;
+	gap: 8px;
+	margin-top: 12px;
+	padding: 12px 16px;
+	background: #fff8e1;
+	border: 1px solid #ffd54f;
+	border-left: 4px solid #ffa000;
+	border-radius: 4px;
+	font-size: 13px;
+	line-height: 1.5;
+	color: #5d4037;
+	animation: rdcMsiFadeIn 0.3s ease;
+}
+
+.rdc-msi-disclaimer-icon {
+	flex-shrink: 0;
+	font-size: 18px;
+	color: #ffa000;
+	line-height: 1.2;
+}
+
+.rdc-msi-disclaimer-text {
+	flex: 1;
+}
+
+#form-checkout__installments[disabled] {
+	background-color: #f5f5f5 !important;
+	border-color: #ddd !important;
+}
+
+@keyframes rdcMsiFadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(-5px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 480px) {
+	.rdc-msi-disclaimer {
+		font-size: 12px;
+		padding: 10px 12px;
+	}
+}
