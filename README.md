@@ -48,6 +48,10 @@ Novedades recientes
 	- Plantilla en `woocommerce/emails/customer-reset-password.php`.
 	- Copy en espanol adaptado al tono de Reef Dealers Club.
 	- CTA de restablecimiento con color principal de marca (`#009fe3`).
+- Se agrego un modulo para forzar cotizacion de envio en checkout:
+	- En carrito se ocultan metodos/calculadora de envio y se muestra mensaje informativo.
+	- En checkout se mantiene el flujo normal de cotizacion de WooCommerce.
+	- Modulo desacoplado en `includes/checkout-shipping.php` con estilos en `assets/css/cart-shipping-controls.css`.
 
 --
 
@@ -90,6 +94,7 @@ Estructura relevante (paths relativos a la raíz del tema):
 - `functions.php` — Entrypoint del tema hijo; registra menús, carga modulos en `includes/` y registra bloques.
 - `includes/header.php` — Modulo del header (enqueue, hooks de Astra, AJAX de subcategorias, fragments del carrito y metadatos de menu).
 - `includes/search.php` — Modulo de busqueda (consultas por texto/SKU, query de blog y encolado de estilos de resultados).
+- `includes/checkout-shipping.php` — Modulo de envio en carrito/checkout: oculta cotizacion en carrito, deshabilita calculadora en carrito y muestra aviso para cotizar en checkout.
 - `includes/msi-promotions/`
 	- `init.php` — Bootstrap del modulo MSI.
 	- `admin-page.php` — UI de administracion para MSI MercadoPago (settings y whitelist por producto).
@@ -100,6 +105,7 @@ Estructura relevante (paths relativos a la raíz del tema):
 - `assets/css/search-results.css` — Estilos de la plantilla de resultados de busqueda.
 - `assets/css/msi-admin.css` — Estilos del panel de administracion MSI.
 - `assets/css/msi-checkout-control.css` — Estilos del aviso y estado visual de MSI en checkout.
+- `assets/css/cart-shipping-controls.css` — Estilos para ocultar UI de envio en carrito y mostrar mensaje de cotizacion en checkout.
 - `assets/js/custom-header.js` — Lógica JS del header: toggle del sidebar, submenú dinámico, llamadas AJAX para subcategorías.
 - `assets/js/msi-admin.js` — Interacciones del panel MSI (agregar/quitar productos, seleccion masiva de meses).
 - `assets/js/msi-checkout-control.js` — Control frontend de cuotas de MercadoPago segun reglas MSI del carrito.

@@ -28,6 +28,7 @@ add_action( 'wp_enqueue_scripts', 'child_enqueue_styles', 15 );
 require_once get_stylesheet_directory() . '/includes/header.php';
 require_once get_stylesheet_directory() . '/includes/search.php';
 require_once get_stylesheet_directory() . '/includes/msi-promotions/init.php';
+require_once get_stylesheet_directory() . '/includes/checkout-shipping.php';
 
 
 /**
