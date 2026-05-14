@@ -50,6 +50,7 @@ Novedades recientes
 	- CTA de restablecimiento con color principal de marca (`#009fe3`).
 - Se agrego un modulo para forzar cotizacion de envio en checkout:
 	- En carrito se ocultan metodos/calculadora de envio y se muestra mensaje informativo.
+	- Se reemplaza visualmente la fila nativa de envio en carrito por una fila controlada por el tema para evitar labels inconsistentes y garantizar el mensaje.
 	- En checkout se mantiene el flujo normal de cotizacion de WooCommerce.
 	- Se deshabilita y oculta la seccion "Enviar a una direccion diferente" en checkout.
 	- Se remueve la opcion "Descargas" del menu de Mi Cuenta.
