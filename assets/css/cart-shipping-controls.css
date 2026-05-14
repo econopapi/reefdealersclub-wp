@@ -1,0 +1,19 @@
+body.woocommerce-cart .cart_totals .woocommerce-shipping-methods,
+body.woocommerce-cart .cart_totals .woocommerce-shipping-calculator,
+body.woocommerce-cart .cart_totals .woocommerce-shipping-destination,
+body.woocommerce-cart .cart_totals .shipping-calculator-button,
+body.woocommerce-cart .cart_totals .shipping-calculator-form {
+	display: none !important;
+}
+
+body.woocommerce-cart .cart_totals .rdc-shipping-notice {
+	color: #666;
+	font-style: italic;
+	display: inline-block;
+	padding: 4px 0;
+}
+
+body.woocommerce-checkout #ship-to-different-address,
+body.woocommerce-checkout .shipping_address {
+	display: none !important;
+}
