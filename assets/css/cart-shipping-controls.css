@@ -12,3 +12,8 @@ body.woocommerce-cart .cart_totals .rdc-shipping-notice {
 	display: inline-block;
 	padding: 4px 0;
 }
+
+body.woocommerce-checkout #ship-to-different-address,
+body.woocommerce-checkout .shipping_address {
+	display: none !important;
+}

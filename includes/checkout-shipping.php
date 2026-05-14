@@ -21,10 +21,19 @@ function rdc_is_woocommerce_cart_page() {
 }
 
 /**
- * Encola estilos para ocultar elementos de envio en carrito.
+ * Determina si estamos en contexto de checkout de WooCommerce.
+ *
+ * @return bool
+ */
+function rdc_is_woocommerce_checkout_page() {
+	return function_exists( 'is_checkout' ) && is_checkout();
+}
+
+/**
+ * Encola estilos para ocultar elementos de envio en carrito/checkout.
  */
 function rdc_enqueue_cart_shipping_controls_assets() {
-	if ( ! rdc_is_woocommerce_cart_page() ) {
+	if ( ! rdc_is_woocommerce_cart_page() && ! rdc_is_woocommerce_checkout_page() ) {
 		return;
 	}
 
@@ -66,3 +75,29 @@ function rdc_disable_shipping_calculator_on_cart( $show_calculator ) {
 	return $show_calculator;
 }
 add_filter( 'woocommerce_shipping_show_shipping_calculator', 'rdc_disable_shipping_calculator_on_cart', 10, 1 );
+
+/**
+ * Remueve "Descargas" del menu de Mi Cuenta.
+ *
+ * @param array<string, string> $items Items del menu de cuenta.
+ * @return array<string, string>
+ */
+function rdc_remove_downloads_from_account_menu( $items ) {
+	if ( isset( $items['downloads'] ) ) {
+		unset( $items['downloads'] );
+	}
+
+	return $items;
+}
+add_filter( 'woocommerce_account_menu_items', 'rdc_remove_downloads_from_account_menu', 20, 1 );
+
+/**
+ * Fuerza el checkout sin opcion de direccion de envio distinta.
+ *
+ * @param bool $ship_to_different_address Estado original del checkbox.
+ * @return bool
+ */
+function rdc_disable_ship_to_different_address( $ship_to_different_address ) {
+	return false;
+}
+add_filter( 'woocommerce_ship_to_different_address_checked', 'rdc_disable_ship_to_different_address', 10, 1 );
