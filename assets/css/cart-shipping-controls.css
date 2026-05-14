@@ -6,6 +6,10 @@ body.woocommerce-cart .cart_totals .shipping-calculator-form {
 	display: none !important;
 }
 
+body.woocommerce-cart .cart_totals tr.shipping:not(.rdc-shipping-notice-row) {
+	display: none !important;
+}
+
 body.woocommerce-cart .cart_totals .rdc-shipping-notice {
 	color: #666;
 	font-style: italic;

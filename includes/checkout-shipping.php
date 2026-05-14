@@ -62,6 +62,23 @@ function rdc_replace_cart_shipping_html_with_checkout_notice( $shipping_html ) {
 add_filter( 'woocommerce_cart_totals_shipping_html', 'rdc_replace_cart_shipping_html_with_checkout_notice', 10, 1 );
 
 /**
+ * Agrega una fila propia de envio en el total del carrito.
+ *
+ * Esto evita depender del label del template activo y asegura el mensaje.
+ */
+function rdc_render_cart_shipping_notice_row() {
+	if ( ! rdc_is_woocommerce_cart_page() ) {
+		return;
+	}
+
+	echo '<tr class="shipping rdc-shipping-notice-row">';
+	echo '<th>Envio</th>';
+	echo '<td data-title="Envio"><span class="rdc-shipping-notice">Los costos de envio se calculan en el Checkout de pago.</span></td>';
+	echo '</tr>';
+}
+add_action( 'woocommerce_cart_totals_after_shipping', 'rdc_render_cart_shipping_notice_row', 20 );
+
+/**
  * Deshabilita el calculador de envio unicamente en carrito.
  *
  * @param bool $show_calculator Estado original.
