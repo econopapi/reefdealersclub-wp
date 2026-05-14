@@ -44,6 +44,10 @@ Novedades recientes
 	- Whitelist de productos con meses permitidos por producto (3, 6, 9, 12).
 	- Control de checkout para bloquear a 1 mensualidad en carritos mixtos o sin MSI.
 	- Modulo desacoplado en `includes/msi-promotions/` y assets en `assets/css/msi-*.css` y `assets/js/msi-*.js`.
+- Se agrego override de email de WooCommerce para reset de contrasena:
+	- Plantilla en `woocommerce/emails/customer-reset-password.php`.
+	- Copy en espanol adaptado al tono de Reef Dealers Club.
+	- CTA de restablecimiento con color principal de marca (`#009fe3`).
 
 --
 
@@ -106,6 +110,7 @@ Estructura relevante (paths relativos a la raíz del tema):
 - `template-parts/header-custom.php` — Markup del header personalizado y menú lateral (incluye fallbacks `rdc_default_quick_links`, `rdc_default_sidebar_menu`).
 - `template-parts/footer-custom.php` — Markup del footer personalizado (newsletter, columnas de enlaces, contacto).
 - `search.php` — Plantilla de resultados unificada para productos (texto + SKU) y blog.
+- `woocommerce/emails/customer-reset-password.php` — Override del correo de recuperacion de contrasena de WooCommerce adaptado a branding RDC.
 
 Componentes y comportamiento (análisis detallado)
 -----------------------------------------------
