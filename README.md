@@ -98,6 +98,7 @@ Estructura relevante (paths relativos a la raíz del tema):
 - `includes/header.php` — Modulo del header (enqueue, hooks de Astra, AJAX de subcategorias, fragments del carrito y metadatos de menu).
 - `includes/search.php` — Modulo de busqueda (consultas por texto/SKU, query de blog y encolado de estilos de resultados).
 - `includes/checkout-shipping.php` — Modulo de WooCommerce para carrito/checkout/mi-cuenta: oculta cotizacion en carrito, deshabilita calculadora en carrito, desactiva direccion de envio alterna en checkout y remueve "Descargas" del menu de Mi Cuenta.
+- `includes/account-email-lock.php` — Modulo de WooCommerce para mantener inmutable el correo electronico en Detalles de la cuenta.
 - `includes/msi-promotions/`
 	- `init.php` — Bootstrap del modulo MSI.
 	- `admin-page.php` — UI de administracion para MSI MercadoPago (settings y whitelist por producto).
@@ -120,6 +121,7 @@ Estructura relevante (paths relativos a la raíz del tema):
 - `template-parts/footer-custom.php` — Markup del footer personalizado (newsletter, columnas de enlaces, contacto).
 - `search.php` — Plantilla de resultados unificada para productos (texto + SKU) y blog.
 - `woocommerce/emails/customer-reset-password.php` — Override del correo de recuperacion de contrasena de WooCommerce adaptado a branding RDC.
+- `woocommerce/myaccount/form-edit-account.php` — Override de Detalles de la cuenta para mostrar el correo electronico como dato no editable.
 
 Componentes y comportamiento (análisis detallado)
 -----------------------------------------------
