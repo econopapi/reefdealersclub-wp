@@ -99,6 +99,7 @@ Estructura relevante (paths relativos a la raíz del tema):
 - `includes/search.php` — Modulo de busqueda (consultas por texto/SKU, query de blog y encolado de estilos de resultados).
 - `includes/checkout-shipping.php` — Modulo de WooCommerce para carrito/checkout/mi-cuenta: oculta cotizacion en carrito, deshabilita calculadora en carrito, desactiva direccion de envio alterna en checkout y remueve "Descargas" del menu de Mi Cuenta.
 - `includes/account-email-lock.php` — Modulo de WooCommerce para mantener inmutable el correo electronico en Detalles de la cuenta.
+- `includes/checkout-labels.php` — Modulo de WooCommerce para ajustar textos del checkout: "Detalles de pedido", "Alcaldía/Municipio" y "Estado".
 - `includes/msi-promotions/`
 	- `init.php` — Bootstrap del modulo MSI.
 	- `admin-page.php` — UI de administracion para MSI MercadoPago (settings y whitelist por producto).
